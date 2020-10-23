@@ -9,6 +9,7 @@ export default class ItemAddForm extends Component {
         label: ''
     }
     onLabelChange = (event) => {
+        
         this.setState({
             label: event.target.value,
         });

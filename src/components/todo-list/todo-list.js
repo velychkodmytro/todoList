@@ -4,7 +4,7 @@ import TodoListItem from '../todo-list-item';
 import './todo-list.css';
 
 
-const TodoList = ({ todos, onDeleted, onToggleImportant, onToggleDone }) => {
+const TodoList = ({ todos, onDeleted, onToggleImportant, onToggleDone, onToggleDeleted }) => {
 
   const elements = todos.filter(item => item.isShow).map((item) => {
     const { id, ...itemProps } = item;

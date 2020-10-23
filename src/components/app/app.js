@@ -22,6 +22,7 @@ export default class App extends Component {
     ],
     term: '',
     filter: 'all',
+   
   };
 
   createTodoItem(label) {
@@ -29,6 +30,7 @@ export default class App extends Component {
       label,
       important: false,
       done: false,
+      deleted: false,
       id: this.maxId++,
       isShow: true,
     };
@@ -99,6 +101,23 @@ export default class App extends Component {
     });
   };
 
+  onToggleDeleted = (id) => {
+    
+       this.setState(({todoData}) => {
+      //   const idx = todoData.findIndex((el) => el.id === id);
+      //   const before = todoData.slice(0, idx);
+      //   const after = todoData.slice(idx + 1);
+      //   const newArray = [...before, ...after];
+  
+        return{
+         // todoData: newArray,
+          todoData: this.toggleProperty(todoData, id, 'deleted')
+        };
+      });
+      
+     
+  }
+
   search(items, term) {
     if (term.length === 0) {
       return items;
@@ -113,11 +132,13 @@ export default class App extends Component {
   filter(items, filter) {
     switch (filter) {
       case 'all':
-        return items;
+        return items.filter((item) => !item.deleted);
       case 'active':
-        return items.filter((item) => !item.done);
+        return items.filter((item) => !item.done && !item.deleted);
       case 'done':
-        return items.filter((item) => item.done);
+        return items.filter((item) => item.done && !item.deleted);
+      case 'deleted':
+        return items.filter((item) => item.deleted);
       default:
         return items;
     }
@@ -141,8 +162,6 @@ export default class App extends Component {
   //   })
   // }
 
-
-
   onFilterChange = (filter) => {
     this.setState({ filter });
   }
@@ -150,11 +169,13 @@ export default class App extends Component {
   render() {
     const { todoData, term, filter } = this.state;
     const visibleItems = this.filter(this.search(todoData, term), filter);
+    //const deletedItems = this.filter(this.search(todoData,deleted));
 
     const doneCount = todoData
-      .filter(elem => elem.done).length;
-    const todoCount = todoData.length - doneCount;
-
+      
+      .filter(elem => elem.done && !elem.deleted).length;
+    const todoCount = todoData.filter(elem => !elem.deleted).length - doneCount;
+    
     return (
       <div className="todo-app">
         <AppHeader toDo={todoCount} done={doneCount} />
@@ -169,7 +190,7 @@ export default class App extends Component {
 
         <TodoList
           todos={visibleItems}
-          onDeleted={this.deleteItem}
+          onDeleted={this.onToggleDeleted}
           onToggleImportant={this.onToggleImportant}
           onToggleDone={this.onToggleDone}
         />

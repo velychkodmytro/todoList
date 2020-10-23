@@ -14,6 +14,7 @@ export default class ItemStatusFilter extends Component {
     { name: 'all', label: 'All' },
     { name: 'active', label: 'Active' },
     { name: 'done', label: 'Done' },
+    { name: 'deleted', label: 'Deleted'},
   ];
 
 
